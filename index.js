@@ -13,12 +13,25 @@ const productRoute = require("./routes/productRoute");
 const authRoute = require("./routes/auth");
 const userRoute = require("./routes/useRoute")
 const categoryRoute = require("./routes/cat");
+const cartegoryRoute = require("./routes/cart");
+
 const stripeRoute = require("./routes/stripeRoute");
 
 const bodyParser = require("body-parser");
 
 app.use(express.json());
-app.use(cors()); 
+app.use(cors(
+    {
+        origin: 'https://ecommerce-2024-1baff.web.app',
+        // origin: 'http://localhost:5174',
+
+        credentials: true, 
+    }
+)); 
+
+
+
+
 app.use(bodyParser.urlencoded({ extended: true })); 
 app.use(cookieParser());
   
@@ -26,6 +39,8 @@ app.use("/api/auth/", authRoute)
 app.use("/api/product/", productRoute); 
 app.use("/api/user/", userRoute)
 app.use("/api/cat/", categoryRoute)
+app.use("/api/cart/", cartegoryRoute)
+
 app.use("/api/stripe/", stripeRoute)    
 
 
@@ -50,3 +65,4 @@ app.listen(PORT, ()=>{
    
 
 
+ 

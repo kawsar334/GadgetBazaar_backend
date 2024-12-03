@@ -10,7 +10,7 @@ const register = async (req, res, next) => {
         const salt = await bcrypt.genSalt(10)
         const userExist = await User.findOne({ email: req.body.email })
         if (userExist) {
-            res.status(200).json({ message: "user already exist please Login ", })
+            res.status(200).json({ message: "user already exist please Login ", success: false, })
         } else {
             const hasedPassword = await bcrypt.hash(req.body.password, salt);
             const newUser = new User({
@@ -38,26 +38,26 @@ const register = async (req, res, next) => {
 const LOGIN = async (req, res, next) => {
 
     try {
-        const transporter= nodemailer.createTransport({
-            service:"gmail",
-            auth:{
-                user:"kawsarfiroz@gmai.com",
-                password:process.env.PASSWORD
-            },
+        // const transporter= nodemailer.createTransport({
+        //     service:"gmail",
+        //     auth:{
+        //         user:"kawsarfiroz@gmai.com",
+        //         password:process.env.PASSWORD
+        //     },
 
 
-        })
-        const mailOptions = {
-            from:process.env.EMIL,
-            to:req.body.email,
-            subject:`sending email with react js and node js `
+        // })
+        // const mailOptions = {
+        //     from:process.env.EMIL,
+        //     to:req.body.email,
+        //     subject:`sending email with react js and node js `
             
-        }
+        // }
 
         const user = await User.findOne({ email: req.body.email });
         if (!user) {
             return res.status(200).json({
-                message: "User not found  !", success: false,
+                message: "User not found Please Register  !", success: false,
             })
         } else {
             const pass = await bcrypt.compare(req.body.password, user.password);
@@ -69,12 +69,19 @@ const LOGIN = async (req, res, next) => {
                 const token = await jwt.sign({ id: user._id, isAdmin: user.isAdmin }, process.env.SECRETE, { expiresIn: "1d" });
                 const { password, ...others } = user._doc;
                 await User.findOneAndUpdate({ isAdmin: true }, { $push: { notification: `${user.name} Logged In Now..` } });
-                res.cookie("token", token, { httpOnly: true }).json({
+                res.cookie("token", token, { 
+                    httpOnly: true ,
+                    secure: true, 
+                    sameSite: 'None', 
+                    maxAge: 24 * 60 * 60 * 1000
+                }).json({
                     message: "Login successfully",
                     others,
                     success: true,
                     token
                 });
+             // Protect the cookie from client-side scripts
+                  
             }
         }
     } catch (err) {

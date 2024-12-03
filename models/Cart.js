@@ -10,6 +10,10 @@ const CartSchema = new mongoose.Schema({
     userId:{
         type:String,
         required:true
+    },
+    totalPrice:{
+        type:Number,
+        required:true
     }
     
 }, { timestamps: true })

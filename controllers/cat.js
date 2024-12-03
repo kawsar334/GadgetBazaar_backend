@@ -1,6 +1,24 @@
 const Cat = require("../models/Cat")
 
 
+
+
+// app.post('/api/cart', async (req, res) => {
+//     try {
+//         const { userId, cart, totalPrice } = req.body;
+
+//         const newCart = new CartModel({
+//             userId,
+//             cart,
+//             totalPrice,
+//         });
+
+//         await newCart.save();
+//         res.status(200).json({ message: 'Cart saved successfully!' });
+//     } catch (error) {
+//         res.status(500).json({ error: 'Failed to save cart.' });
+//     }
+// });
 // create new category
 const createCat = async(req, res, next)=>{
     try{
